@@ -1,0 +1,39 @@
+<idea-plugin version="2">
+  <id>org.jetbrains.research.smtlib</id>
+  <name>SmtLib language</name>
+  <version>0.1</version>
+  <vendor email="parrt@antlr.org" url="https://github.com/parrt/sample-jetbrains-plugin">
+    SmtLib idea plugin
+  </vendor>
+
+  <description>SmtLib language highlighting and formatting</description>
+
+  <idea-version since-build="133"/>
+  <depends>com.intellij.modules.lang</depends>
+
+  <application-components>
+  </application-components>
+
+  <project-components>
+    <component>
+      <implementation-class>org.jetbrains.research.smtlib.SmtLibPluginController</implementation-class>
+    </component>
+  </project-components>
+
+  <actions>
+  </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <colorSettingsPage implementation="org.jetbrains.research.smtlib.SmtLibColorSettingsPage"/>
+    <fileTypeFactory implementation="org.jetbrains.research.smtlib.SmtLibFileTypeFactory"/>
+    <lang.syntaxHighlighterFactory key="SmtLib"
+      implementationClass="org.jetbrains.research.smtlib.SmtLibSyntaxHighlighterFactory"/>
+    <lang.parserDefinition language="SmtLib"
+      implementationClass="org.jetbrains.research.smtlib.SmtLibParserDefinition"/>
+    <lang.ast.factory language="SmtLib"
+      implementationClass="org.jetbrains.research.smtlib.SmtLibASTFactory"/>
+    <runConfigurationProducer implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigProducer"/>
+    <configurationType implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigType"/>
+    <programRunner implementation="org.jetbrains.research.smtlib.runner.SmtLibRunner"/>
+  </extensions>
+</idea-plugin>

@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://www.jetbrains.com/intellij-repository/snapshots" }
+        maven { url 'https://dl.bintray.com/jetbrains/intellij-plugin-service' }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.5.0-SNAPSHOT"
+    }
+}
+
+wrapper {
+    gradleVersion = '5.2.1'
+}
+
+group 'org.jetbrains.research'
+version pluginVersion
+
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'idea'
+apply plugin: 'antlr'
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+intellij {
+    version = ideaVersion
+    pluginName 'smtlib-intellij-plugin'
+    downloadSources true
+    updateSinceUntilBuild false
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    antlr("org.antlr:antlr4:$antlr4Version") {
+        exclude group: 'com.ibm.icu', module: 'icu4j'
+    }
+    implementation 'org.antlr:antlr4-intellij-adaptor:0.1'
+}
+
+generateGrammarSource {
+    arguments += ["-package", "org.jetbrains.research.smtlib.grammar"]
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileKotlin.dependsOn generateGrammarSource
