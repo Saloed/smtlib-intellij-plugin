@@ -2,7 +2,7 @@
   <id>org.jetbrains.research.smtlib</id>
   <name>SmtLib language</name>
   <version>0.1</version>
-  <vendor email="parrt@antlr.org" url="https://github.com/parrt/sample-jetbrains-plugin">
+  <vendor email="v.sobol@ksp.icc.spbstu.ru" url="https://github.com/Saloed/smtlib-intellij-plugin">
     SmtLib idea plugin
   </vendor>
 

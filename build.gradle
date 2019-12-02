@@ -36,11 +36,17 @@ repositories {
     mavenCentral()
 }
 
+task fatJar(type: Jar) {
+    classifier = 'all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 dependencies {
     antlr("org.antlr:antlr4:$antlr4Version") {
         exclude group: 'com.ibm.icu', module: 'icu4j'
     }
-    implementation 'org.antlr:antlr4-intellij-adaptor:0.1'
+    compile 'org.antlr:antlr4-intellij-adaptor:0.1'
 }
 
 generateGrammarSource {
