@@ -55,6 +55,7 @@ class SmtLibParserDefinition : ParserDefinition {
                 else -> Command(node)
             }
             SMTLIBv2Parser.RULE_term -> Term(node)
+            SMTLIBv2Parser.RULE_var_binding -> Term(node)
             else -> ANTLRPsiNode(node)
         }
     }
@@ -68,6 +69,10 @@ class SmtLibParserDefinition : ParserDefinition {
         val ID: IElementType
         val SYMBOL: IElementType
         val FUN_DECLARATION: IElementType
+        val TERM: IElementType
+        val COMMAND: IElementType
+        val OPEN_PAR: IElementType
+        val BINDING: IElementType
 
         init {
             PSIElementTypeFactory.defineLanguageIElementTypes(SmtLibLanguage, SMTLIBv2Parser.tokenNames, SMTLIBv2Parser.ruleNames)
@@ -75,10 +80,14 @@ class SmtLibParserDefinition : ParserDefinition {
             COMMENTS = PSIElementTypeFactory.createTokenSet(SmtLibLanguage, SMTLIBv2Lexer.Comment)
             WHITESPACE = PSIElementTypeFactory.createTokenSet(SmtLibLanguage, SMTLIBv2Lexer.WS)
             STRING = PSIElementTypeFactory.createTokenSet(SmtLibLanguage, SMTLIBv2Lexer.String)
+            OPEN_PAR = PSIElementTypeFactory.getTokenIElementTypes(SmtLibLanguage)[SMTLIBv2Lexer.ParOpen]
             val rules = PSIElementTypeFactory.getRuleIElementTypes(SmtLibLanguage)
             ID = rules[SMTLIBv2Parser.RULE_identifier]
             SYMBOL = rules[SMTLIBv2Parser.RULE_symbol]
             FUN_DECLARATION = rules[SMTLIBv2Parser.RULE_cmd_declareFun]
+            TERM = rules[SMTLIBv2Parser.RULE_term]
+            COMMAND = rules[SMTLIBv2Parser.RULE_command]
+            BINDING = rules[SMTLIBv2Parser.RULE_var_binding]
         }
     }
 

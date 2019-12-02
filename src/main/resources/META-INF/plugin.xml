@@ -8,7 +8,7 @@
 
   <description>SmtLib language highlighting and formatting</description>
 
-  <idea-version since-build="133"/>
+  <idea-version since-build="170"/>
   <depends>com.intellij.modules.lang</depends>
 
   <application-components>
@@ -16,7 +16,8 @@
 
   <project-components>
     <component>
-      <implementation-class>org.jetbrains.research.smtlib.SmtLibPluginController</implementation-class>
+      <implementation-class>org.jetbrains.research.smtlib.SmtLibPluginController
+      </implementation-class>
     </component>
   </project-components>
 
@@ -32,8 +33,12 @@
       implementationClass="org.jetbrains.research.smtlib.SmtLibParserDefinition"/>
     <lang.ast.factory language="SmtLib"
       implementationClass="org.jetbrains.research.smtlib.SmtLibASTFactory"/>
-    <runConfigurationProducer implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigProducer"/>
-    <configurationType implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigType"/>
+    <lang.formatter language="SmtLib"
+      implementationClass="org.jetbrains.research.smtlib.formatter.SmtLibFormatterModelBuilder"/>
+    <runConfigurationProducer
+      implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigProducer"/>
+    <configurationType
+      implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigType"/>
     <programRunner implementation="org.jetbrains.research.smtlib.runner.SmtLibRunner"/>
   </extensions>
 </idea-plugin>
