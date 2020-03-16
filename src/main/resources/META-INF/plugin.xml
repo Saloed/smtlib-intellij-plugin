@@ -1,4 +1,4 @@
-<idea-plugin version="2">
+<idea-plugin>
   <id>org.jetbrains.research.smtlib</id>
   <name>SmtLib language</name>
   <version>0.1</version>
@@ -25,20 +25,21 @@
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
+    <fileType name="SmtLib file" implementationClass="org.jetbrains.research.smtlib.SmtLibFileType"
+              fieldName="INSTANCE" language="SmtLib" extensions="smtlib"/>
     <colorSettingsPage implementation="org.jetbrains.research.smtlib.SmtLibColorSettingsPage"/>
-    <fileTypeFactory implementation="org.jetbrains.research.smtlib.SmtLibFileTypeFactory"/>
-    <lang.syntaxHighlighterFactory key="SmtLib"
-      implementationClass="org.jetbrains.research.smtlib.SmtLibSyntaxHighlighterFactory"/>
+    <lang.syntaxHighlighterFactory language="SmtLib"
+                                   implementationClass="org.jetbrains.research.smtlib.SmtLibSyntaxHighlighterFactory"/>
     <lang.parserDefinition language="SmtLib"
-      implementationClass="org.jetbrains.research.smtlib.SmtLibParserDefinition"/>
+                           implementationClass="org.jetbrains.research.smtlib.SmtLibParserDefinition"/>
     <lang.ast.factory language="SmtLib"
-      implementationClass="org.jetbrains.research.smtlib.SmtLibASTFactory"/>
+                      implementationClass="org.jetbrains.research.smtlib.SmtLibASTFactory"/>
     <lang.formatter language="SmtLib"
-      implementationClass="org.jetbrains.research.smtlib.formatter.SmtLibFormatterModelBuilder"/>
+                    implementationClass="org.jetbrains.research.smtlib.formatter.SmtLibFormatterModelBuilder"/>
     <runConfigurationProducer
-      implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigProducer"/>
+            implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigProducer"/>
     <configurationType
-      implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigType"/>
+            implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigType"/>
     <programRunner implementation="org.jetbrains.research.smtlib.runner.SmtLibRunner"/>
   </extensions>
 </idea-plugin>
