@@ -48,7 +48,12 @@ abstract class SmtLibFormatterBlock(val element: PsiElement) : AbstractBlock(ele
             .filter { it.node.nonEmptyBlock() }
             .flatMap { it.formatterBlock() }
 
-    val isBig: Boolean by lazy { element.textLength > BIG_THRESHOLD && element.collectChildrenMatchingPredicate { it is SmtLibLeafElement }.all { it.textLength < BIG_THRESHOLD }}
+    val isBig: Boolean by lazy {
+        if(element.textLength < BIG_THRESHOLD) return@lazy false
+        val leafs = element.collectChildrenMatchingPredicate { it is SmtLibLeafElement }
+        if(leafs.all { it.textLength < BIG_THRESHOLD }) return@lazy true
+        return@lazy leafs.size > 20
+    }
 
     fun spaceParenthesis(child1: Block, child2: Block, default: Spacing) = when {
         child1 is ParenthesisFormatterBlock && child2 is ParenthesisFormatterBlock -> NO_SPACING

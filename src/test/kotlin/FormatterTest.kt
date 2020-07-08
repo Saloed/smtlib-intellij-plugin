@@ -10,4 +10,5 @@ class FormatterTest : FormatterTestCase() {
     fun testJustHeader() = doTest()
     fun testExpression() = doTest()
     fun testSample1() = doTest()
+    fun testSample2() = doTest()
 }
