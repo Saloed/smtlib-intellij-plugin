@@ -611,6 +611,12 @@ keyword
     | Colon simpleSymbol
     ;
 
+
+symbol_list
+    : ParOpen symbol* ParClose
+    ;
+
+
 // S-expression
 
 spec_constant
@@ -621,12 +627,15 @@ spec_constant
     | string
     ;
 
+s_expr_list
+    : ParOpen s_expr* ParClose
+    ;
 
 s_expr
     : spec_constant
     | symbol
     | keyword
-    | ParOpen s_expr* ParClose
+    | s_expr_list
     ;
 
 // Identifiers
@@ -636,9 +645,13 @@ index
     | symbol
     ;
 
+complex_identifier
+    : ParOpen GRW_Underscore symbol index+ ParClose
+    ;
+
 identifier
     : symbol
-    | ParOpen GRW_Underscore symbol index+ ParClose
+    | complex_identifier
     ;
 
 // Attributes
@@ -646,7 +659,7 @@ identifier
 attribute_value
     : spec_constant
     | symbol
-    | ParOpen s_expr* ParClose
+    | s_expr_list
     ;
 
 attribute
@@ -656,17 +669,37 @@ attribute
 
 // Sorts
 
+complex_sort
+    : ParOpen identifier sort+ ParClose
+    ;
+
 sort
     : identifier
-    | ParOpen identifier sort+ ParClose
+    | complex_sort
+    ;
+
+sorted_var_non_empty_list
+    : ParOpen sorted_var+ ParClose
+    ;
+
+sorted_var_list
+    : ParOpen sorted_var* ParClose
+    ;
+
+sort_list
+    : ParOpen sort* ParClose
     ;
 
 
 // Terms and Formulas
 
-qual_identifer
+named_qual_identifer
+    : ParOpen GRW_As identifier sort ParClose
+    ;
+
+qual_identifier
     : identifier
-    | ParOpen GRW_As identifier sort ParClose
+    | named_qual_identifer
     ;
 
 var_binding
@@ -677,31 +710,76 @@ sorted_var
     : ParOpen symbol sort ParClose
     ;
 
+complex_pattern
+    : ParOpen symbol symbol+ ParClose
+    ;
+
 pattern
     : symbol
-    | ParOpen symbol symbol+ ParClose
+    | complex_pattern
     ;
 
 match_case
     : ParOpen pattern term ParClose
     ;
 
-term
-    : spec_constant
-    | qual_identifer
-    | ParOpen qual_identifer term+ ParClose
-    | ParOpen GRW_Let ParOpen var_binding+ ParClose term ParClose
-    | ParOpen GRW_Forall ParOpen sorted_var+ ParClose term ParClose
-    | ParOpen GRW_Exists ParOpen sorted_var+ ParClose term ParClose
-    | ParOpen GRW_Match term ParOpen match_case+ ParClose ParClose
-    | ParOpen GRW_Exclamation term attribute+ ParClose
+call_term_arguments
+    : term+
     ;
 
+call_term
+    : ParOpen qual_identifier call_term_arguments ParClose
+    ;
+
+var_binding_list
+    : ParOpen var_binding+ ParClose
+    ;
+
+match_case_list
+    : ParOpen match_case+ ParClose
+    ;
+
+let_term
+    : ParOpen GRW_Let var_binding_list term ParClose
+    ;
+
+forall_term
+    : ParOpen GRW_Forall sorted_var_non_empty_list term ParClose
+    ;
+
+exists_term
+    : ParOpen GRW_Exists sorted_var_non_empty_list term ParClose
+    ;
+
+match_term
+    : ParOpen GRW_Match term  match_case_list ParClose
+    ;
+
+exclamation_term
+    : ParOpen GRW_Exclamation term attribute+ ParClose
+    ;
+
+term
+    : spec_constant
+    | qual_identifier
+    | call_term
+    | let_term
+    | forall_term
+    | exists_term
+    | match_term
+    | exclamation_term
+    ;
+
+
+term_list_non_empty
+    : ParOpen term+ ParClose
+    ;
 
 // Theory Declarations
 
 sort_symbol_decl
-    : ParOpen identifier numeral attribute* ParClose;
+    : ParOpen identifier numeral attribute* ParClose
+    ;
 
 meta_spec_constant
     : GRW_Numeral
@@ -709,21 +787,48 @@ meta_spec_constant
     | GRW_String
     ;
 
-fun_symbol_decl
+fun_symbol_decl_spec
     : ParOpen spec_constant sort attribute* ParClose
-    | ParOpen meta_spec_constant sort attribute* ParClose
-    | ParOpen identifier sort+ attribute* ParClose
+    ;
+
+fun_symbol_decl_meta_spec
+    : ParOpen meta_spec_constant sort attribute* ParClose
+    ;
+
+fun_symbol_decl_identifier
+    : ParOpen identifier sort+ attribute* ParClose
+    ;
+
+fun_symbol_decl
+    : fun_symbol_decl_spec
+    | fun_symbol_decl_meta_spec
+    | fun_symbol_decl_identifier
+    ;
+
+symbol_list_non_empty
+    : ParOpen symbol+ ParClose
+    ;
+
+complex_fun_symbol_decl
+    : ParOpen GRW_Par symbol_list_non_empty fun_symbol_decl_identifier ParClose
     ;
 
 par_fun_symbol_decl
     : fun_symbol_decl
-    | ParOpen GRW_Par ParOpen symbol+ ParClose ParOpen identifier sort+
-    attribute* ParClose ParClose
+    | complex_fun_symbol_decl
+    ;
+
+sort_symbol_decl_list_non_empty
+    : ParOpen sort_symbol_decl+ ParClose
+    ;
+
+par_fun_symbol_decl_list_non_empty
+    : ParOpen par_fun_symbol_decl+ ParClose
     ;
 
 theory_attribute
-    : PK_Sorts ParOpen sort_symbol_decl+ ParClose
-    | PK_Funs ParOpen par_fun_symbol_decl+ ParClose
+    : PK_Sorts sort_symbol_decl_list_non_empty
+    | PK_Funs par_fun_symbol_decl_list_non_empty
     | PK_SortsDescription string
     | PK_FunsDescription string
     | PK_Definition string
@@ -740,7 +845,7 @@ theory_decl
 // Logic Declarations
 
 logic_attribue
-    : PK_Theories ParOpen symbol+ ParClose
+    : PK_Theories symbol_list_non_empty
     | PK_Language string
     | PK_Extension string
     | PK_Values string
@@ -767,25 +872,35 @@ constructor_dec
     : ParOpen symbol selector_dec* ParClose
     ;
 
-datatype_dec
+constructor_dec_list_non_empty
     : ParOpen constructor_dec+ ParClose
-    | ParOpen GRW_Par ParOpen symbol+ ParClose ParOpen constructor_dec+
-    ParClose ParClose
+    ;
+
+par_data_type_dec
+    : ParOpen GRW_Par symbol_list_non_empty constructor_dec_list_non_empty ParClose
+    ;
+
+datatype_dec
+    : constructor_dec_list_non_empty
+    | par_data_type_dec
     ;
 
 function_dec
-    : ParOpen symbol ParOpen sorted_var* ParClose sort ParClose
+    : ParOpen symbol sorted_var_list sort ParClose
     ;
 
 function_def
-    : symbol ParOpen sorted_var* ParClose sort term
+    : symbol sorted_var_list sort term
+    ;
+
+negated_prop_literal
+    : ParOpen PS_Not symbol ParClose
     ;
 
 prop_literal
     : symbol
-    | ParOpen PS_Not symbol ParClose
+    | negated_prop_literal
     ;
-
 
 script
     : command*
@@ -911,41 +1026,151 @@ cmd_setOption
     : CMD_SetOption
     ;
 
-command
-    : ParOpen cmd_assert term ParClose
-    | ParOpen cmd_checkSat ParClose
-    | ParOpen cmd_checkSatAssuming ParClose
-    | ParOpen cmd_declareConst symbol sort ParClose
-    | ParOpen cmd_declareDatatype symbol datatype_dec ParClose
+comand_cmd_assert
+     : cmd_assert term
+     ;
+comand_cmd_checkSat
+ : cmd_checkSat
+ ;
+comand_cmd_checkSatAssuming
+ : cmd_checkSatAssuming
+ ;
+comand_cmd_declareConst
+ : cmd_declareConst symbol sort
+ ;
+comand_cmd_declareDatatype
+ : cmd_declareDatatype symbol datatype_dec
+ ;
+
+sort_dec_list_non_empty
+     : ParOpen sort_dec+ ParClose
+     ;
+
+datatype_dec_list_non_empty
+    : ParOpen datatype_dec+ ParClose
+    ;
+
+// cardinalitiees for sort_dec and datatype_dec have to be n+1
+comand_cmd_declareDatatypes
+ : cmd_declareDatatypes sort_dec_list_non_empty datatype_dec_list_non_empty
+ ;
+comand_cmd_declareFun
+ : cmd_declareFun symbol sort_list sort
+ ;
+comand_cmd_declareSort
+ : cmd_declareSort symbol numeral
+ ;
+comand_cmd_defineFun
+ : cmd_defineFun function_def
+ ;
+comand_cmd_defineFunRec
+ : cmd_defineFunRec function_def
+ ;
+
+ function_dec_list_non_empty
+    : ParOpen function_dec+ ParClose
+    ;
+
+// cardinalitiees for function_dec and term have to be n+1
+comand_cmd_defineFunsRec
+ : cmd_defineFunsRec function_dec_list_non_empty  term_list_non_empty
+ ;
+
+comand_cmd_defineSort
+ : cmd_defineSort symbol symbol_list sort
+ ;
+comand_cmd_echo
+ : cmd_echo string
+ ;
+comand_cmd_exit
+ : cmd_exit
+ ;
+comand_cmd_getAssertions
+ : cmd_getAssertions
+ ;
+comand_cmd_getAssignment
+ : cmd_getAssignment
+ ;
+comand_cmd_getInfo
+ : cmd_getInfo info_flag
+ ;
+comand_cmd_getModel
+ : cmd_getModel
+ ;
+comand_cmd_getOption
+ : cmd_getOption keyword
+ ;
+comand_cmd_getProof
+ : cmd_getProof
+ ;
+comand_cmd_getUnsatAssumptions
+ : cmd_getUnsatAssumptions
+ ;
+comand_cmd_getUnsatCore
+ : cmd_getUnsatCore
+ ;
+comand_cmd_getValue
+ : cmd_getValue term_list_non_empty
+ ;
+comand_cmd_pop
+ : cmd_pop numeral
+ ;
+comand_cmd_push
+ : cmd_push numeral
+ ;
+comand_cmd_reset
+ : cmd_reset
+ ;
+comand_cmd_resetAssertions
+ : cmd_resetAssertions
+ ;
+comand_cmd_setInfo
+ : cmd_setInfo attribute
+ ;
+comand_cmd_setLogic
+ : cmd_setLogic symbol
+ ;
+comand_cmd_setOption
+ : cmd_setOption option
+ ;
+
+single_command
+    : comand_cmd_assert
+    | comand_cmd_checkSat
+    | comand_cmd_checkSatAssuming
+    | comand_cmd_declareConst
+    | comand_cmd_declareDatatype
     // cardinalitiees for sort_dec and datatype_dec have to be n+1
-    | ParOpen cmd_declareDatatypes ParOpen sort_dec+ ParClose ParOpen
-    datatype_dec+ ParClose ParClose
-    | ParOpen cmd_declareFun symbol ParOpen sort* ParClose sort ParClose
-    | ParOpen cmd_declareSort symbol numeral ParClose
-    | ParOpen cmd_defineFun function_def ParClose
-    | ParOpen cmd_defineFunRec function_def ParClose
+    | comand_cmd_declareDatatypes
+    | comand_cmd_declareFun
+    | comand_cmd_declareSort
+    | comand_cmd_defineFun
+    | comand_cmd_defineFunRec
     // cardinalitiees for function_dec and term have to be n+1
-    | ParOpen cmd_defineFunsRec ParOpen function_dec+ ParClose
-    ParOpen term+ ParClose ParClose
-    | ParOpen cmd_defineSort symbol ParOpen symbol* ParClose sort ParClose
-    | ParOpen cmd_echo string ParClose
-    | ParOpen cmd_exit ParClose
-    | ParOpen cmd_getAssertions ParClose
-    | ParOpen cmd_getAssignment ParClose
-    | ParOpen cmd_getInfo info_flag ParClose
-    | ParOpen cmd_getModel ParClose
-    | ParOpen cmd_getOption keyword ParClose
-    | ParOpen cmd_getProof ParClose
-    | ParOpen cmd_getUnsatAssumptions ParClose
-    | ParOpen cmd_getUnsatCore ParClose
-    | ParOpen cmd_getValue ParOpen term+ ParClose ParClose
-    | ParOpen cmd_pop numeral ParClose
-    | ParOpen cmd_push numeral ParClose
-    | ParOpen cmd_reset ParClose
-    | ParOpen cmd_resetAssertions ParClose
-    | ParOpen cmd_setInfo attribute ParClose
-    | ParOpen cmd_setLogic symbol ParClose
-    | ParOpen cmd_setOption option ParClose
+    | comand_cmd_defineFunsRec
+    | comand_cmd_defineSort
+    | comand_cmd_echo
+    | comand_cmd_exit
+    | comand_cmd_getAssertions
+    | comand_cmd_getAssignment
+    | comand_cmd_getInfo
+    | comand_cmd_getModel
+    | comand_cmd_getOption
+    | comand_cmd_getProof
+    | comand_cmd_getUnsatAssumptions
+    | comand_cmd_getUnsatCore
+    | comand_cmd_getValue
+    | comand_cmd_pop
+    | comand_cmd_push
+    | comand_cmd_reset
+    | comand_cmd_resetAssertions
+    | comand_cmd_setInfo
+    | comand_cmd_setLogic
+    | comand_cmd_setOption
+    ;
+
+command
+    : ParOpen single_command ParClose
     ;
 
 
@@ -996,12 +1221,23 @@ reason_unknown
     | s_expr
     ;
 
-model_response
+model_response_func
     : ParOpen CMD_DefineFun function_def ParClose
-    | ParOpen CMD_DefineFunRec function_def ParClose
+    ;
+
+model_response_func_rec
+    : ParOpen CMD_DefineFunRec function_def ParClose
+    ;
+
+model_response_func_rec_complex
+    : ParOpen CMD_DefineFunsRec function_dec_list_non_empty term_list_non_empty ParClose
+    ;
+
+model_response
+    : model_response_func
+    | model_response_func_rec
     // cardinalitiees for function_dec and term have to be n+1
-    | ParOpen CMD_DefineFunsRec ParOpen function_dec+ ParClose ParOpen term+
-    ParClose ParClose
+    | model_response_func_rec_complex
     ;
 
 info_response
@@ -1057,11 +1293,11 @@ get_proof_response
     ;
 
 get_unsat_assump_response
-    : ParOpen symbol* ParClose
+    : symbol_list
     ;
 
 get_unsat_core_response
-    : ParOpen symbol* ParClose
+    : symbol_list
     ;
 
 get_value_response
@@ -1082,11 +1318,15 @@ specific_success_response
     | get_value_response
     ;
 
+general_response_error
+    : ParOpen PS_Error string ParClose
+    ;
+
 general_response
     : PS_Success
     | specific_success_response
     | PS_Unsupported
-    | ParOpen PS_Error string ParClose
+    | general_response_error
     ;
 
 

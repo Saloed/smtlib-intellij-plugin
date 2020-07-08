@@ -31,9 +31,9 @@
     <lang.syntaxHighlighterFactory language="SmtLib"
                                    implementationClass="org.jetbrains.research.smtlib.SmtLibSyntaxHighlighterFactory"/>
     <lang.parserDefinition language="SmtLib"
-                           implementationClass="org.jetbrains.research.smtlib.SmtLibParserDefinition"/>
+                           implementationClass="org.jetbrains.research.smtlib.parser.SmtLibParserDefinition"/>
     <lang.ast.factory language="SmtLib"
-                      implementationClass="org.jetbrains.research.smtlib.SmtLibASTFactory"/>
+                      implementationClass="org.jetbrains.research.smtlib.parser.SmtLibParserDefinition"/>
     <lang.formatter language="SmtLib"
                     implementationClass="org.jetbrains.research.smtlib.formatter.SmtLibFormatterModelBuilder"/>
     <runConfigurationProducer
