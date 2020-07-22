@@ -2,6 +2,9 @@ package org.jetbrains.research.smtlib.psi
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiNamedElement
+import com.intellij.psi.impl.ResolveScopeManager
+import com.intellij.psi.search.LocalSearchScope
+import com.intellij.psi.search.SearchScope
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.castSafelyTo
@@ -11,22 +14,21 @@ import org.antlr.intellij.adaptor.psi.Trees
 import org.jetbrains.research.smtlib.SmtLibLanguage
 import org.jetbrains.research.smtlib.grammar.SMTLIBv2Parser
 
-sealed class SmtLibLeafElement(type: IElementType, text: CharSequence) : ANTLRPsiLeafNode(type, text)
+interface SmtLibPsiElement : PsiElement
+
+sealed class SmtLibLeafElement(type: IElementType, text: CharSequence) : ANTLRPsiLeafNode(type, text), SmtLibPsiElement
 
 class Identifier(type: IElementType, text: CharSequence) : SmtLibLeafElement(type, text), PsiNamedElement {
     override fun getName() = text
     override fun setName(name: String): PsiElement {
         parent ?: return this
-        val newId = Trees.createLeafFromText(project, SmtLibLanguage, context, name, elementType) ?: return this
+        val newId = Trees.createLeafFromText(project, SmtLibLanguage, context, name, elementType)
+                ?: throw IllegalStateException("Unable to generate Identifier with name $name")
         return replace(newId)
     }
 
-    override fun getReference() = PsiTreeUtil.findFirstParent(this) {
-        val rule = it?.node?.elementType?.castSafelyTo<RuleIElementType>()
-                ?: return@findFirstParent false
-        rule.ruleIndex == SMTLIBv2Parser.RULE_qual_identifier
-    }?.let { FunctionReference(this) }
-
+    override fun getUseScope(): SearchScope = LocalSearchScope(containingFile)
+    override fun getReference() = IdentifierReference(this)
     override fun toString(): String = "Identifier($elementType)"
 }
 

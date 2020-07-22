@@ -1,45 +1,57 @@
 <idea-plugin>
-  <id>org.jetbrains.research.smtlib</id>
-  <name>SmtLib language</name>
-  <version>0.1</version>
-  <vendor email="v.sobol@ksp.icc.spbstu.ru" url="https://github.com/Saloed/smtlib-intellij-plugin">
-    SmtLib idea plugin
-  </vendor>
+    <id>org.jetbrains.research.smtlib</id>
+    <name>SmtLib language</name>
+    <version>0.1</version>
+    <vendor email="v.sobol@ksp.icc.spbstu.ru" url="https://github.com/Saloed/smtlib-intellij-plugin">
+        SmtLib idea plugin
+    </vendor>
 
-  <description>SmtLib language highlighting and formatting</description>
+    <description>SmtLib language highlighting and formatting</description>
 
-  <idea-version since-build="170"/>
-  <depends>com.intellij.modules.lang</depends>
+    <idea-version since-build="170"/>
+    <depends>com.intellij.modules.lang</depends>
 
-  <application-components>
-  </application-components>
+    <application-components>
+    </application-components>
 
-  <project-components>
-    <component>
-      <implementation-class>org.jetbrains.research.smtlib.SmtLibPluginController
-      </implementation-class>
-    </component>
-  </project-components>
+    <project-components>
+        <component>
+            <implementation-class>org.jetbrains.research.smtlib.SmtLibPluginController
+            </implementation-class>
+        </component>
+    </project-components>
 
-  <actions>
-  </actions>
+    <actions>
+    </actions>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <fileType name="SmtLib file" implementationClass="org.jetbrains.research.smtlib.SmtLibFileType"
-              fieldName="INSTANCE" language="SmtLib" extensions="smtlib"/>
-    <colorSettingsPage implementation="org.jetbrains.research.smtlib.SmtLibColorSettingsPage"/>
-    <lang.syntaxHighlighterFactory language="SmtLib"
-                                   implementationClass="org.jetbrains.research.smtlib.SmtLibSyntaxHighlighterFactory"/>
-    <lang.parserDefinition language="SmtLib"
-                           implementationClass="org.jetbrains.research.smtlib.parser.SmtLibParserDefinition"/>
-    <lang.ast.factory language="SmtLib"
-                      implementationClass="org.jetbrains.research.smtlib.parser.SmtLibParserDefinition"/>
-    <lang.formatter language="SmtLib"
-                    implementationClass="org.jetbrains.research.smtlib.formatter.SmtLibFormatterModelBuilder"/>
-    <runConfigurationProducer
-            implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigProducer"/>
-    <configurationType
-            implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigType"/>
-    <programRunner implementation="org.jetbrains.research.smtlib.runner.SmtLibRunner"/>
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="SmtLib file" implementationClass="org.jetbrains.research.smtlib.SmtLibFileType"
+                  fieldName="INSTANCE" language="SmtLib" extensions="smtlib"/>
+        <colorSettingsPage implementation="org.jetbrains.research.smtlib.SmtLibColorSettingsPage"/>
+        <lang.syntaxHighlighterFactory language="SmtLib"
+                                       implementationClass="org.jetbrains.research.smtlib.SmtLibSyntaxHighlighterFactory"/>
+        <lang.parserDefinition language="SmtLib"
+                               implementationClass="org.jetbrains.research.smtlib.parser.SmtLibParserDefinition"/>
+        <lang.ast.factory language="SmtLib"
+                          implementationClass="org.jetbrains.research.smtlib.parser.SmtLibParserDefinition"/>
+        <lang.findUsagesProvider language="SmtLib"
+                                 implementationClass="org.jetbrains.research.smtlib.refactoring.SmtLibFindUsagesProvider"/>
+        <lang.elementManipulator forClass="org.jetbrains.research.smtlib.psi.Identifier"
+                                 implementationClass="org.jetbrains.research.smtlib.refactoring.IdentifierManipulator"/>
+        <lang.commenter language="SmtLib"
+                        implementationClass="org.jetbrains.research.smtlib.refactoring.SmtLibCommenter"/>
+        <lang.braceMatcher language="SmtLib"
+                           implementationClass="org.jetbrains.research.smtlib.parser.SmtLibBraceMatcher"/>
+        <lang.namesValidator language="SmtLib"
+                             implementationClass="org.jetbrains.research.smtlib.refactoring.IdentifierNameValidator"/>
+        <lang.formatter language="SmtLib"
+                        implementationClass="org.jetbrains.research.smtlib.formatter.SmtLibFormatterModelBuilder"/>
+        <lang.refactoringSupport language="SmtLib"
+                                 implementationClass="org.jetbrains.research.smtlib.refactoring.SmtLibRefactoringSupportProvider"/>
+        <runConfigurationProducer
+                implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigProducer"/>
+        <configurationType
+                implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigType"/>
+        <programRunner implementation="org.jetbrains.research.smtlib.runner.SmtLibRunner"/>
+    </extensions>
 </idea-plugin>

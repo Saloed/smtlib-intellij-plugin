@@ -25,8 +25,7 @@ import org.jetbrains.research.smtlib.psi.*
 
 class SmtLibParserDefinition : CoreASTFactory(), ParserDefinition {
 
-    override fun createLexer(project: Project) =
-            ANTLRLexerAdaptor(SmtLibLanguage, SMTLIBv2Lexer(null))
+    override fun createLexer(project: Project) = ANTLRLexerAdaptor(SmtLibLanguage, SMTLIBv2Lexer(null))
 
     override fun createParser(project: Project) = object : ANTLRParserAdaptor(SmtLibLanguage, SMTLIBv2Parser(null)) {
         override fun parse(parser: Parser, root: IElementType) = when (root) {
@@ -77,10 +76,13 @@ class SmtLibParserDefinition : CoreASTFactory(), ParserDefinition {
             RULE_sorted_var_non_empty_list -> SortedVarList(node)
             RULE_var_binding_list -> TermList(node)
             RULE_command -> Command(node)
+            RULE_comand_cmd_assert -> AssertCommand(node)
+            RULE_let_term -> LetTerm(node)
+            RULE_var_binding -> VarBinding(node)
+            RULE_forall_term -> ForallTerm(node)
             RULE_call_term -> CallTerm(node)
             RULE_call_term_arguments -> CallArguments(node)
             RULE_term -> Term(node)
-            RULE_var_binding -> Term(node)
             RULE_spec_constant -> Constant(node)
             else -> OtherPsiNode(node)
         }
