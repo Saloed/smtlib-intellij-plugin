@@ -74,7 +74,7 @@ class SmtLibParserDefinition : CoreASTFactory(), ParserDefinition {
             RULE_sorted_var -> SortedVar(node)
             RULE_sorted_var_list -> SortedVarList(node)
             RULE_sorted_var_non_empty_list -> SortedVarList(node)
-            RULE_var_binding_list -> TermList(node)
+            RULE_var_binding_list -> VarBindingList(node)
             RULE_command -> Command(node)
             RULE_comand_cmd_assert -> AssertCommand(node)
             RULE_let_term -> LetTerm(node)

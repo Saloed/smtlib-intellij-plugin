@@ -48,6 +48,7 @@
                         implementationClass="org.jetbrains.research.smtlib.formatter.SmtLibFormatterModelBuilder"/>
         <lang.refactoringSupport language="SmtLib"
                                  implementationClass="org.jetbrains.research.smtlib.refactoring.SmtLibRefactoringSupportProvider"/>
+        <inlineActionHandler implementation="org.jetbrains.research.smtlib.refactoring.LetBindingInlineAction"/>
         <runConfigurationProducer
                 implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigProducer"/>
         <configurationType

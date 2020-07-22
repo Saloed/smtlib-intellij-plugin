@@ -43,11 +43,13 @@ class SortedVarList(node: ASTNode) : SmtLibPsiNode(node)
 // todo: this nodes are not Other but formatter ...
 class AssertCommand(node: ASTNode) : OtherPsiNode(node)
 class LetTerm(node: ASTNode) : OtherPsiNode(node) {
+    fun bindings() = PsiTreeUtil.getChildOfType(this, VarBindingList::class.java)
     fun declarations(): List<Identifier> {
-        val varBindingList = PsiTreeUtil.getChildOfType(this, TermList::class.java) ?: return emptyList()
-        val varBindings = PsiTreeUtil.getChildrenOfType(varBindingList, VarBinding::class.java) ?: return emptyList()
-        return varBindings.filterNotNull().map { it.varIdentifier() }
+        val varBindingList = bindings() ?: return emptyList()
+        return varBindingList.bindings().map { it.varIdentifier() }
     }
+    fun expression(): Term = PsiTreeUtil.getChildOfType(this, Term::class.java)
+            ?: throw IllegalStateException("Let binding without expression")
 }
 
 class ForallTerm(node: ASTNode) : OtherPsiNode(node) {
@@ -61,4 +63,11 @@ class ForallTerm(node: ASTNode) : OtherPsiNode(node) {
 class VarBinding(node: ASTNode) : Term(node) {
     fun varIdentifier(): Identifier = PsiTreeUtil.findChildOfType(this, Identifier::class.java)
             ?: throw IllegalStateException("Var binding has no identifier")
+
+    fun expression(): Term = PsiTreeUtil.getChildOfType(this, Term::class.java)
+            ?: throw IllegalStateException("Var binding has no expression")
+}
+
+class VarBindingList(node: ASTNode) : TermList(node) {
+    fun bindings() = PsiTreeUtil.getChildrenOfType(this, VarBinding::class.java)?.filterNotNull() ?: emptyList()
 }
