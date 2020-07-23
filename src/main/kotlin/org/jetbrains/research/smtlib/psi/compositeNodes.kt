@@ -1,12 +1,27 @@
 package org.jetbrains.research.smtlib.psi
 
 import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.PsiUtilCore
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode
 import org.antlr.intellij.adaptor.psi.IdentifierDefSubtree
 import org.jetbrains.research.smtlib.parser.SmtLibParserDefinition
 
-abstract class SmtLibPsiNode(node: ASTNode) : ANTLRPsiNode(node), SmtLibPsiElement
+abstract class SmtLibPsiNode(node: ASTNode) : ANTLRPsiNode(node), SmtLibPsiElement {
+    override fun getChildren(): Array<PsiElement> {
+        var element: PsiElement? = firstChild ?: return PsiElement.EMPTY_ARRAY
+        val result = arrayListOf<PsiElement>()
+        while (element != null) {
+            if (element !is PsiWhiteSpace) {
+                result.add(element)
+            }
+            element = element.nextSibling
+        }
+        return PsiUtilCore.toPsiElementArray(result)
+    }
+}
 
 open class OtherPsiNode(node: ASTNode) : SmtLibPsiNode(node)
 
@@ -48,6 +63,7 @@ class LetTerm(node: ASTNode) : OtherPsiNode(node) {
         val varBindingList = bindings() ?: return emptyList()
         return varBindingList.bindings().map { it.varIdentifier() }
     }
+
     fun expression(): Term = PsiTreeUtil.getChildOfType(this, Term::class.java)
             ?: throw IllegalStateException("Let binding without expression")
 }

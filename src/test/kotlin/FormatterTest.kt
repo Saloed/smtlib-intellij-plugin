@@ -7,6 +7,7 @@ class FormatterTest : FormatterTestCase() {
     override fun getBasePath(): String = "formatter"
     override fun getFileExtension(): String = SmtLibFileType.FILE_EXTENSION
 
+    fun testComments() = doTest()
     fun testJustHeader() = doTest()
     fun testExpression() = doTest()
     fun testSample1() = doTest()

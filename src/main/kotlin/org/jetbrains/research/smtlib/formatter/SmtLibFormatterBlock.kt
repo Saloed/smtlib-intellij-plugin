@@ -6,8 +6,10 @@ import com.intellij.formatting.Indent
 import com.intellij.formatting.Spacing
 import com.intellij.lang.ASTNode
 import com.intellij.openapi.util.TextRange
+import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.formatter.common.AbstractBlock
+import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.research.smtlib.psi.*
 
 abstract class SmtLibFormatterBlock(val element: PsiElement) : AbstractBlock(element.node, null, null) {
@@ -49,9 +51,9 @@ abstract class SmtLibFormatterBlock(val element: PsiElement) : AbstractBlock(ele
             .flatMap { it.formatterBlock() }
 
     val isBig: Boolean by lazy {
-        if(element.textLength < BIG_THRESHOLD) return@lazy false
-        val leafs = element.collectChildrenMatchingPredicate { it is SmtLibLeafElement }
-        if(leafs.all { it.textLength < BIG_THRESHOLD }) return@lazy true
+        if (element.textLength < BIG_THRESHOLD) return@lazy false
+        val leafs = PsiTreeUtil.findChildrenOfAnyType(element, SmtLibLeafElement::class.java)
+        if (leafs.all { it.textLength < BIG_THRESHOLD }) return@lazy true
         return@lazy leafs.size > 20
     }
 
@@ -69,11 +71,12 @@ abstract class SmtLibFormatterBlock(val element: PsiElement) : AbstractBlock(ele
     }
 
     companion object {
-        fun create(element: PsiElement): Block = element.formatterBlock().first { it is CommandListFormatterBlock }
+        fun create(element: PsiElement): Block = TopLevelFormatterBlock(element)
 
         fun ASTNode.nonEmptyBlock(): Boolean = text.trim().isNotEmpty()
 
         fun PsiElement.formatterBlock(): List<SmtLibFormatterBlock> = when (this) {
+            is PsiComment -> listOf(CommentFormatterBlock(this))
             is OpenPar -> listOf(ParenthesisFormatterBlock(true, this))
             is ClosePar -> listOf(ParenthesisFormatterBlock(false, this))
             is SmtLibLeafElement -> listOf(NameFormatterBlock(this))
@@ -104,7 +107,6 @@ abstract class SmtLibFormatterBlock(val element: PsiElement) : AbstractBlock(ele
                 val other: List<SmtLibFormatterBlock>,
                 val close: ParenthesisFormatterBlock
         ) {
-
             fun alignParenthesis() {
                 val alignment = open.getOrCreateAlignment()
                 close.blockAlignment = alignment
@@ -155,6 +157,15 @@ abstract class SmtLibFormatterBlock(val element: PsiElement) : AbstractBlock(ele
     }
 }
 
+class TopLevelFormatterBlock(element: PsiElement) : SmtLibFormatterBlock(element) {
+    override fun getIndent(): Indent = Indent.getAbsoluteNoneIndent()
+    override fun spacing(child1: Block, child2: Block): Spacing? = null
+}
+
+class CommentFormatterBlock(val comment: PsiComment) : SmtLibFormatterBlock(comment) {
+    override fun getIndent(): Indent = Indent.getAbsoluteNoneIndent()
+    override fun spacing(child1: Block, child2: Block): Spacing? = COMMON_SPACING_WITH_SINGLE_LINE_BREAK
+}
 
 class ParenthesisFormatterBlock(val isOpen: Boolean, element: PsiElement) : SmtLibFormatterBlock(element) {
     override fun getIndent(): Indent = Indent.getNoneIndent()
@@ -183,9 +194,7 @@ class NamePartBlock(element: PsiElement, val range: TextRange) : SmtLibFormatter
 class CommandFormatterBlock(element: Command) : SmtLibFormatterBlock(element) {
     override fun getIndent(): Indent = Indent.getAbsoluteNoneIndent()
     private val isAssert: Boolean by lazy {
-        element.collectChildrenMatchingPredicate(firstOnly = true) {
-            it.text == "assert"
-        }.isNotEmpty()
+        PsiTreeUtil.findChildOfType(element, AssertCommand::class.java) != null
     }
 
     override fun buildChildren(): List<SmtLibFormatterBlock> {
@@ -229,14 +238,10 @@ class SortedVarFormatterBlock(element: SortedVar) : SmtLibFormatterBlock(element
 
 class TermFormatterBlock(element: Term) : SmtLibFormatterBlock(element) {
     private val isForall: Boolean by lazy {
-        element.collectChildrenMatchingPredicate(firstOnly = true) {
-            it.text == "forall"
-        }.isNotEmpty()
+        PsiTreeUtil.getChildOfType(element, ForallTerm::class.java) != null
     }
     private val isLet: Boolean by lazy {
-        element.collectChildrenMatchingPredicate(firstOnly = true) {
-            it.text == "let"
-        }.isNotEmpty()
+        PsiTreeUtil.getChildOfType(element, LetTerm::class.java) != null
     }
 
     override fun getIndent(): Indent = Indent.getContinuationIndent()
