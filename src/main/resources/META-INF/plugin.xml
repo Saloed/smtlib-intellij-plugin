@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>org.jetbrains.research.smtlib</id>
-    <name>SmtLib language</name>
+    <name>SmtLib Language</name>
     <version>0.1</version>
     <vendor email="v.sobol@ksp.icc.spbstu.ru" url="https://github.com/Saloed/smtlib-intellij-plugin">
         SmtLib idea plugin
@@ -8,7 +8,7 @@
 
     <description>SmtLib language highlighting and formatting</description>
 
-    <idea-version since-build="170"/>
+    <idea-version since-build="190"/>
     <depends>com.intellij.modules.lang</depends>
 
     <application-components>
@@ -22,6 +22,11 @@
     </project-components>
 
     <actions>
+        <action id="org.jetbrains.research.smtlib.refactoring.SimplifyAction"
+                class="org.jetbrains.research.smtlib.refactoring.SimplifyAction" text="Simplify Expression"
+                description=" Simplify SmtLib expression using Z3 engine">
+            <add-to-group group-id="RefactoringMenu" anchor="first"/>
+        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">

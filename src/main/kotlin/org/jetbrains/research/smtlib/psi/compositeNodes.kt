@@ -56,7 +56,10 @@ class SortList(node: ASTNode) : SmtLibPsiNode(node)
 class SortedVarList(node: ASTNode) : SmtLibPsiNode(node)
 
 // todo: this nodes are not Other but formatter ...
-class AssertCommand(node: ASTNode) : OtherPsiNode(node)
+class AssertCommand(node: ASTNode) : OtherPsiNode(node) {
+    fun term() = PsiTreeUtil.getChildOfType(this, Term::class.java)
+}
+
 class LetTerm(node: ASTNode) : OtherPsiNode(node) {
     fun bindings() = PsiTreeUtil.getChildOfType(this, VarBindingList::class.java)
     fun declarations(): List<Identifier> {
