@@ -29,6 +29,7 @@ intellij {
     pluginName 'smtlib-intellij-plugin'
     downloadSources true
     updateSinceUntilBuild false
+    buildSearchableOptions.enabled = false
 }
 
 idea {
@@ -40,12 +41,9 @@ idea {
 
 repositories {
     mavenCentral()
-}
-
-task fatJar(type: Jar) {
-    classifier = 'all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+    maven {
+        url  "https://dl.bintray.com/saloed/z3"
+    }
 }
 
 dependencies {
@@ -53,6 +51,8 @@ dependencies {
         exclude group: 'com.ibm.icu', module: 'icu4j'
     }
     compile 'org.antlr:antlr4-intellij-adaptor:0.1'
+    // for formula simplifier
+    compile 'com.microsoft:z3:4.8.6'
 }
 
 generateGrammarSource {

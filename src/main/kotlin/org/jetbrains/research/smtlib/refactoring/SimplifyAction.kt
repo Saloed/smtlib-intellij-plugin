@@ -20,12 +20,14 @@ class SimplifyAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.getRequiredData(CommonDataKeys.PROJECT)
         val element = e.getSmtLibElement() ?: e.findSelectedSmtLibElement() ?: return
+        val file = element.containingFile ?: return
         val nearestAssert = PsiTreeUtil.getParentOfType(element, AssertCommand::class.java, false) ?: return
-        val term = nearestAssert.term() ?: return
-        val simplifiedFormula = Simplifier().simplify(term.text)
-        val simplifiedTerm = SmtLibElementFactory.createTerm(simplifiedFormula, project)
+        val allAsserts = PsiTreeUtil.findChildrenOfType(file, AssertCommand::class.java)
+        val targetAssertIdx = allAsserts.indexOf(nearestAssert)
+        val simplifiedAssert = Simplifier().simplifyAssertStatement(file.text, targetAssertIdx)
+        val simplifiedAssertElement = SmtLibElementFactory.createAssert(simplifiedAssert, project)
         runUndoTransparentWriteAction {
-            term.replace(simplifiedTerm)
+            nearestAssert.replace(simplifiedAssertElement)
         }
     }
 

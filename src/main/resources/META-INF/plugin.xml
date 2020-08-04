@@ -24,7 +24,7 @@
     <actions>
         <action id="org.jetbrains.research.smtlib.refactoring.SimplifyAction"
                 class="org.jetbrains.research.smtlib.refactoring.SimplifyAction" text="Simplify Expression"
-                description=" Simplify SmtLib expression using Z3 engine">
+                description=" Simplify SmtLib assert statement using Z3 engine">
             <add-to-group group-id="RefactoringMenu" anchor="first"/>
         </action>
     </actions>
