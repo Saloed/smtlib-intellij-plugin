@@ -8,7 +8,7 @@
 
     <description>SmtLib language highlighting and formatting</description>
 
-    <idea-version since-build="190"/>
+    <idea-version since-build="193"/>
     <depends>com.intellij.modules.lang</depends>
 
     <application-components>

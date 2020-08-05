@@ -1,15 +1,13 @@
 package org.jetbrains.research.smtlib.runner
 
-import com.intellij.execution.configurations.ConfigurationTypeBase
-import com.intellij.openapi.project.PossiblyDumbAware
+import com.intellij.execution.configurations.RunConfiguration
+import com.intellij.execution.configurations.RunConfigurationModule
+import com.intellij.execution.configurations.SimpleConfigurationType
+import com.intellij.openapi.util.NotNullLazyValue.createConstantValue
+import com.intellij.openapi.project.Project
 import org.jetbrains.research.smtlib.Icons
 
-class SmtLibRunnerConfigType :
-        ConfigurationTypeBase("SmtLibRunConfigurationType", "SmtLib", "SmtLib run configuration", Icons.SMTLIB_ICON),
-        PossiblyDumbAware {
-    init {
-        addFactory(SmtLibRunnerConfigTypeFactory(this))
-    }
-
-    override fun isDumbAware() = true
+class SmtLibRunnerConfigType : SimpleConfigurationType("SmtLibRunConfigurationType", "SmtLib", "SmtLib run configuration", createConstantValue(Icons.SMTLIB_ICON)) {
+    override fun createTemplateConfiguration(project: Project): RunConfiguration =
+            SmtLibRunnerConfig("", RunConfigurationModule(project), this)
 }

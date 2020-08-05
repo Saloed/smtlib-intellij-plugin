@@ -11,9 +11,7 @@ import com.intellij.psi.PsiElement
 import org.jetbrains.research.smtlib.psi.SmtLibFileRoot
 
 class SmtLibRunnerConfigProducer : LazyRunConfigurationProducer<SmtLibRunnerConfig>() {
-    override fun getConfigurationFactory(): ConfigurationFactory =
-            SmtLibRunnerConfigTypeFactory(runConfigurationType())
-
+    override fun getConfigurationFactory(): ConfigurationFactory = runConfigurationType<SmtLibRunnerConfigType>()
 
     override fun setupConfigurationFromContext(
             configuration: SmtLibRunnerConfig,
