@@ -23,44 +23,66 @@ abstract class SmtLibPsiNode(node: ASTNode) : ANTLRPsiNode(node), SmtLibPsiEleme
     }
 }
 
+interface DeclarationProvider : PsiElement {
+    fun declarations(): List<Identifier>
+}
+
+interface FunctionDeclaration : PsiElement {
+    fun funIdentifier(): Identifier
+}
+
 open class OtherPsiNode(node: ASTNode) : SmtLibPsiNode(node)
 
 open class Command(node: ASTNode) : SmtLibPsiNode(node)
 
 class CommandList(node: ASTNode) : SmtLibPsiNode(node)
 
-class FunDeclaration(node: ASTNode) : IdentifierDefSubtree(node, SmtLibParserDefinition.SYMBOL) {
-    fun funIdentifier(): Identifier = PsiTreeUtil.findChildOfType(children[1], Identifier::class.java)
+
+class FunDeclaration(node: ASTNode) : IdentifierDefSubtree(node, SmtLibParserDefinition.SYMBOL), FunctionDeclaration {
+    override fun funIdentifier(): Identifier = PsiTreeUtil.findChildOfType(children[1], Identifier::class.java)
             ?: throw IllegalStateException("Function has no identifier")
 }
 
-open class Sort(node: ASTNode) : SmtLibPsiNode(node)
+class FunDefinition(node: ASTNode) : IdentifierDefSubtree(node, SmtLibParserDefinition.SYMBOL), FunctionDeclaration, DeclarationProvider {
+    private val realDefinition: PsiElement
+        get() = children[1]
 
+    override fun funIdentifier(): Identifier = PsiTreeUtil.findChildOfType(realDefinition.children[0], Identifier::class.java)
+            ?: throw IllegalStateException("Function has no identifier")
+
+    override fun getNameIdentifier(): PsiElement? = funIdentifier()
+
+    override fun declarations(): List<Identifier> {
+        val varDeclList = PsiTreeUtil.getChildOfType(realDefinition, SortedVarList::class.java) ?: return emptyList()
+        return varDeclList.declaredVars()
+    }
+}
+
+open class Term(node: ASTNode) : SmtLibPsiNode(node)
+open class TermList(node: ASTNode) : SmtLibPsiNode(node)
+class Constant(node: ASTNode) : Term(node)
+class CallTerm(node: ASTNode) : Term(node)
+class CallArguments(node: ASTNode) : TermList(node)
+
+open class Sort(node: ASTNode) : SmtLibPsiNode(node)
 open class SortedVar(node: ASTNode) : SmtLibPsiNode(node) {
     fun varIdentifier(): Identifier = PsiTreeUtil.findChildOfType(this, Identifier::class.java)
             ?: throw IllegalStateException("Sorted var has no identifier")
 }
 
-open class Term(node: ASTNode) : SmtLibPsiNode(node)
-
-open class TermList(node: ASTNode) : SmtLibPsiNode(node)
-
-class Constant(node: ASTNode) : Term(node)
-
-class CallTerm(node: ASTNode) : Term(node)
-
-class CallArguments(node: ASTNode) : TermList(node)
-
 class SortList(node: ASTNode) : SmtLibPsiNode(node)
-
-class SortedVarList(node: ASTNode) : SmtLibPsiNode(node)
+class SortedVarList(node: ASTNode) : SmtLibPsiNode(node) {
+    fun declaredVars(): List<Identifier> {
+        val varDecls = PsiTreeUtil.getChildrenOfType(this, SortedVar::class.java) ?: return emptyList()
+        return varDecls.filterNotNull().map { it.varIdentifier() }
+    }
+}
 
 // todo: this nodes are not Other but formatter ...
 class AssertCommand(node: ASTNode) : OtherPsiNode(node)
-class LetTerm(node: ASTNode) : OtherPsiNode(node) {
-    fun bindings() = PsiTreeUtil.getChildOfType(this, VarBindingList::class.java)
-    fun declarations(): List<Identifier> {
-        val varBindingList = bindings() ?: return emptyList()
+class LetTerm(node: ASTNode) : OtherPsiNode(node), DeclarationProvider {
+    override fun declarations(): List<Identifier> {
+        val varBindingList = PsiTreeUtil.getChildOfType(this, VarBindingList::class.java) ?: return emptyList()
         return varBindingList.bindings().map { it.varIdentifier() }
     }
 
@@ -68,11 +90,10 @@ class LetTerm(node: ASTNode) : OtherPsiNode(node) {
             ?: throw IllegalStateException("Let binding without expression")
 }
 
-class ForallTerm(node: ASTNode) : OtherPsiNode(node) {
-    fun declarations(): List<Identifier> {
+class ForallTerm(node: ASTNode) : OtherPsiNode(node), DeclarationProvider {
+    override fun declarations(): List<Identifier> {
         val varDeclList = PsiTreeUtil.getChildOfType(this, SortedVarList::class.java) ?: return emptyList()
-        val varDecls = PsiTreeUtil.getChildrenOfType(varDeclList, SortedVar::class.java) ?: return emptyList()
-        return varDecls.filterNotNull().map { it.varIdentifier() }
+        return varDeclList.declaredVars()
     }
 }
 

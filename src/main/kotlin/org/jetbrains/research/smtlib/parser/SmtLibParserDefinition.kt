@@ -1,7 +1,7 @@
 package org.jetbrains.research.smtlib.parser
 
-import com.intellij.core.CoreASTFactory
 import com.intellij.lang.ASTNode
+import com.intellij.lang.DefaultASTFactoryImpl
 import com.intellij.lang.ParserDefinition
 import com.intellij.lang.PsiBuilder
 import com.intellij.openapi.project.Project
@@ -22,8 +22,9 @@ import org.jetbrains.research.smtlib.grammar.SMTLIBv2Lexer
 import org.jetbrains.research.smtlib.grammar.SMTLIBv2Parser
 import org.jetbrains.research.smtlib.grammar.SMTLIBv2Parser.*
 import org.jetbrains.research.smtlib.psi.*
+import org.jetbrains.research.smtlib.psi.Number
 
-class SmtLibParserDefinition : CoreASTFactory(), ParserDefinition {
+class SmtLibParserDefinition : DefaultASTFactoryImpl(), ParserDefinition {
 
     override fun createLexer(project: Project) = ANTLRLexerAdaptor(SmtLibLanguage, SMTLIBv2Lexer(null))
 
@@ -69,6 +70,7 @@ class SmtLibParserDefinition : CoreASTFactory(), ParserDefinition {
             RULE_keyword -> Constant(node)
             RULE_script -> CommandList(node)
             RULE_comand_cmd_declareFun -> FunDeclaration(node)
+            RULE_comand_cmd_defineFun -> FunDefinition(node)
             RULE_sort -> Sort(node)
             RULE_sort_list -> SortList(node)
             RULE_sorted_var -> SortedVar(node)

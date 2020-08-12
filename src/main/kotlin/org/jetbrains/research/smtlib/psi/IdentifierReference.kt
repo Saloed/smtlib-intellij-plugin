@@ -18,21 +18,16 @@ class IdentifierReference(element: Identifier) : PsiReferenceBase<Identifier>(el
     }
 
     private fun findElementDeclaration(declarationProvider: PsiElement): PsiElement? = when (declarationProvider) {
-        is LetTerm -> findDeclaration(declarationProvider)
-        is ForallTerm -> findDeclaration(declarationProvider)
+        is DeclarationProvider -> findDeclaration(declarationProvider)
         is PsiFile -> findDeclaration(declarationProvider)
         else -> null
     }
 
-    private fun findDeclaration(declarationProvider: LetTerm): PsiElement? =
-            declarationProvider.declarations().find { it match element }
-
-
-    private fun findDeclaration(declarationProvider: ForallTerm): PsiElement? =
+    private fun findDeclaration(declarationProvider: DeclarationProvider): PsiElement? =
             declarationProvider.declarations().find { it match element }
 
     private fun findDeclaration(declarationProvider: PsiFile): PsiElement? =
-            PsiTreeUtil.findChildrenOfAnyType(declarationProvider, FunDeclaration::class.java)
+            PsiTreeUtil.findChildrenOfAnyType(declarationProvider, FunctionDeclaration::class.java)
                     .map { it.funIdentifier() }
                     .find { it match element }
 
