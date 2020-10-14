@@ -11,16 +11,6 @@
     <idea-version since-build="193"/>
     <depends>com.intellij.modules.lang</depends>
 
-    <application-components>
-    </application-components>
-
-    <project-components>
-        <component>
-            <implementation-class>org.jetbrains.research.smtlib.SmtLibPluginController
-            </implementation-class>
-        </component>
-    </project-components>
-
     <actions>
         <action id="org.jetbrains.research.smtlib.refactoring.SimplifyAction"
                 class="org.jetbrains.research.smtlib.refactoring.SimplifyAction" text="Simplify Expression"
@@ -54,10 +44,5 @@
         <lang.refactoringSupport language="SmtLib"
                                  implementationClass="org.jetbrains.research.smtlib.refactoring.SmtLibRefactoringSupportProvider"/>
         <inlineActionHandler implementation="org.jetbrains.research.smtlib.refactoring.LetBindingInlineAction"/>
-        <runConfigurationProducer
-                implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigProducer"/>
-        <configurationType
-                implementation="org.jetbrains.research.smtlib.runner.SmtLibRunnerConfigType"/>
-        <programRunner implementation="org.jetbrains.research.smtlib.runner.SmtLibRunner"/>
     </extensions>
 </idea-plugin>
