@@ -12,7 +12,7 @@ enum class LexerType {
 fun IElementType.lexerType(): LexerType {
     val ttype = castSafelyTo<TokenIElementType>()?.antlrTokenType ?: return LexerType.OTHER
     return when (ttype) {
-        SMTLIBv2Lexer.UndefinedSymbol -> LexerType.IDENTIFIER
+        SMTLIBv2Lexer.UndefinedSymbol, SMTLIBv2Lexer.QuotedSymbol -> LexerType.IDENTIFIER
         in SMTLIBv2Lexer.PK_AllStatistics..SMTLIBv2Lexer.PK_Version -> LexerType.BUILTIN_COMMAND
         in SMTLIBv2Lexer.PS_Not..SMTLIBv2Lexer.PS_Unsat -> LexerType.CONSTANT
         in SMTLIBv2Lexer.CMD_Assert..SMTLIBv2Lexer.CMD_SetOption -> LexerType.COMMAND
