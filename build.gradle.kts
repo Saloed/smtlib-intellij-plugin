@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
+    antlr
     // Java support
     id("java")
     // Kotlin support
@@ -22,6 +23,22 @@ version = properties("pluginVersion")
 // Configure project's dependencies
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    antlr("org.antlr:antlr4:4.9.3") {
+         exclude("com.ibm.icu", "icu4j")
+    }
+    implementation("org.antlr:antlr4-intellij-adaptor:0.1")
+
+}
+
+tasks.generateGrammarSource {
+    arguments = arguments + listOf("-package", "org.jetbrains.research.smtlib.grammar")
+}
+
+tasks.compileKotlin {
+    dependsOn += tasks.generateGrammarSource
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
