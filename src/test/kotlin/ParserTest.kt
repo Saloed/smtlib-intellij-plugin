@@ -1,3 +1,4 @@
+import com.intellij.openapi.util.io.FileUtil
 import com.intellij.testFramework.ParsingTestCase
 import org.jetbrains.research.smtlib.SmtLibFileType
 import org.jetbrains.research.smtlib.parser.SmtLibParserDefinition
@@ -11,4 +12,9 @@ class ParserTest : ParsingTestCase("parser", SmtLibFileType.FILE_EXTENSION, SmtL
     fun testJustHeader() = doTest(true)
     fun testExpression() = doTest(true)
     fun testSample() = doTest(true)
+
+    init {
+        println(myFullDataPath)
+        println(FileUtil.exists(myFullDataPath))
+    }
 }
