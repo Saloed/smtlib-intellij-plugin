@@ -1,1 +1,1 @@
-rootProject.name = "plugin-config-sample"
+rootProject.name = "smtlib-intellij-plugin"

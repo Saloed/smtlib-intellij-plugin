@@ -1,6 +1,6 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# plugin-config-sample Changelog
+# smtlib-intellij-plugin Changelog
 
 ## [Unreleased]
 ### Added
