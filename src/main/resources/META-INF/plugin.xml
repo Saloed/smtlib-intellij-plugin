@@ -4,15 +4,40 @@
     <name>smtlib-intellij-plugin</name>
     <vendor>saloed</vendor>
 
-    <depends>com.intellij.modules.platform</depends>
+ <depends>com.intellij.modules.lang</depends>
+
+    <actions>
+        <action id="org.jetbrains.research.smtlib.refactoring.SimplifyAction"
+                class="org.jetbrains.research.smtlib.refactoring.SimplifyAction" text="Simplify Expression"
+                description=" Simplify SmtLib assert statement using Z3 engine">
+            <add-to-group group-id="RefactoringMenu" anchor="first"/>
+        </action>
+    </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.saloed.pluginconfigsample.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.saloed.pluginconfigsample.services.MyProjectService"/>
+        <fileType name="SmtLib file" implementationClass="org.jetbrains.research.smtlib.SmtLibFileType"
+                  fieldName="INSTANCE" language="SmtLib" extensions="smtlib"/>
+        <colorSettingsPage implementation="org.jetbrains.research.smtlib.SmtLibColorSettingsPage"/>
+        <lang.syntaxHighlighterFactory language="SmtLib"
+                                       implementationClass="org.jetbrains.research.smtlib.SmtLibSyntaxHighlighterFactory"/>
+        <lang.parserDefinition language="SmtLib"
+                               implementationClass="org.jetbrains.research.smtlib.parser.SmtLibParserDefinition"/>
+        <lang.ast.factory language="SmtLib"
+                          implementationClass="org.jetbrains.research.smtlib.parser.SmtLibParserDefinition"/>
+        <lang.findUsagesProvider language="SmtLib"
+                                 implementationClass="org.jetbrains.research.smtlib.refactoring.SmtLibFindUsagesProvider"/>
+        <lang.elementManipulator forClass="org.jetbrains.research.smtlib.psi.Identifier"
+                                 implementationClass="org.jetbrains.research.smtlib.refactoring.IdentifierManipulator"/>
+        <lang.commenter language="SmtLib"
+                        implementationClass="org.jetbrains.research.smtlib.refactoring.SmtLibCommenter"/>
+        <lang.braceMatcher language="SmtLib"
+                           implementationClass="org.jetbrains.research.smtlib.parser.SmtLibBraceMatcher"/>
+        <lang.namesValidator language="SmtLib"
+                             implementationClass="org.jetbrains.research.smtlib.refactoring.IdentifierNameValidator"/>
+        <lang.formatter language="SmtLib"
+                        implementationClass="org.jetbrains.research.smtlib.formatter.SmtLibFormatterModelBuilder"/>
+        <lang.refactoringSupport language="SmtLib"
+                                 implementationClass="org.jetbrains.research.smtlib.refactoring.SmtLibRefactoringSupportProvider"/>
+        <inlineActionHandler implementation="org.jetbrains.research.smtlib.refactoring.LetBindingInlineAction"/>
     </extensions>
-
-    <applicationListeners>
-        <listener class="com.github.saloed.pluginconfigsample.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
 </idea-plugin>
