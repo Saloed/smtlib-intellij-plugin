@@ -49,6 +49,11 @@ jobs:
           java-version: 11
           cache: gradle
 
+      - name: Setup Z3
+        shell: bash
+        run: |
+          mvn install:install-file -Dfile=libs/com.microsoft.z3-4.8.15.0.jar -DgroupId=com.microsoft -DartifactId=z3 -Dversion=4.8.15.0 -Dpackaging=jar
+
       # Set environment variables
       - name: Export Properties
         id: properties
