@@ -3,7 +3,7 @@ import com.intellij.testFramework.ParsingTestCase
 import org.jetbrains.research.smtlib.SmtLibFileType
 import org.jetbrains.research.smtlib.parser.SmtLibParserDefinition
 
-class ParserTest : ParsingTestCase("parser", SmtLibFileType.FILE_EXTENSION, SmtLibParserDefinition()) {
+class ParserTest : ParsingTestCase("parser", SmtLibFileType.FILE_EXTENSION, true, SmtLibParserDefinition()) {
     override fun getTestDataPath(): String = "src/test/testData"
     override fun skipSpaces(): Boolean = false
     override fun includeRanges(): Boolean = true
@@ -13,8 +13,4 @@ class ParserTest : ParsingTestCase("parser", SmtLibFileType.FILE_EXTENSION, SmtL
     fun testExpression() = doTest(true)
     fun testSample() = doTest(true)
 
-    init {
-        println(myFullDataPath)
-        println(FileUtil.exists(myFullDataPath))
-    }
 }
