@@ -70,6 +70,7 @@ class SmtLibParserDefinition : DefaultASTFactoryImpl(), ParserDefinition {
             RULE_keyword -> Constant(node)
             RULE_script -> CommandList(node)
             RULE_comand_cmd_declareFun -> FunDeclaration(node)
+            RULE_comand_cmd_declareConst -> FunDeclaration(node)
             RULE_comand_cmd_defineFun -> FunDefinition(node)
             RULE_sort -> Sort(node)
             RULE_sort_list -> SortList(node)

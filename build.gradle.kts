@@ -23,6 +23,7 @@ version = properties("pluginVersion")
 // Configure project's dependencies
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -30,7 +31,7 @@ dependencies {
          exclude("com.ibm.icu", "icu4j")
     }
     implementation("org.antlr:antlr4-intellij-adaptor:0.1")
-
+    implementation("com.microsoft:z3:4.8.15.0")
 }
 
 tasks.generateGrammarSource {
