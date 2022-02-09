@@ -1,10 +1,15 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.saloed.pluginconfigsample</id>
-    <name>smtlib-intellij-plugin</name>
-    <vendor>saloed</vendor>
+    <id>org.jetbrains.research.smtlib</id>
+    <name>SmtLib Language</name>
+    <version>0.1</version>
+    <vendor email="v.sobol@ksp.icc.spbstu.ru" url="https://github.com/Saloed/smtlib-intellij-plugin">
+        SmtLib idea plugin
+    </vendor>
 
- <depends>com.intellij.modules.lang</depends>
+    <description>SmtLib language highlighting and formatting</description>
+
+    <depends>com.intellij.modules.platform</depends>
 
     <actions>
         <action id="org.jetbrains.research.smtlib.refactoring.SimplifyAction"

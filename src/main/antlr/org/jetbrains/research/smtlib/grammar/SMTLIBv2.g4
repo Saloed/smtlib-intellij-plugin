@@ -35,6 +35,7 @@ grammar SMTLIBv2;
 
 Comment
     : Semicolon ~[\r\n]*
+    -> channel(HIDDEN)
     ;
 
 
@@ -174,6 +175,9 @@ CMD_GetOption
     ;
 CMD_GetProof
     : 'get-proof'
+    ;
+CMD_GetProofGraph
+    : 'get-proof-graph'
     ;
 CMD_GetUnsatAssumptions
     : 'get-unsat-assumptions'
@@ -986,6 +990,10 @@ cmd_getProof
     : CMD_GetProof
     ;
 
+cmd_getProofGraph
+    : CMD_GetProofGraph
+    ;
+
 cmd_getUnsatAssumptions
     : CMD_GetUnsatAssumptions
     ;
@@ -1103,6 +1111,9 @@ comand_cmd_getOption
 comand_cmd_getProof
  : cmd_getProof
  ;
+comand_cmd_getProofGraph
+ : cmd_getProofGraph
+ ;
 comand_cmd_getUnsatAssumptions
  : cmd_getUnsatAssumptions
  ;
@@ -1157,6 +1168,7 @@ single_command
     | comand_cmd_getModel
     | comand_cmd_getOption
     | comand_cmd_getProof
+    | comand_cmd_getProofGraph
     | comand_cmd_getUnsatAssumptions
     | comand_cmd_getUnsatCore
     | comand_cmd_getValue
@@ -1167,6 +1179,7 @@ single_command
     | comand_cmd_setInfo
     | comand_cmd_setLogic
     | comand_cmd_setOption
+    | (.)*?
     ;
 
 command

@@ -37,9 +37,6 @@ tasks.generateGrammarSource {
     arguments = arguments + listOf("-package", "org.jetbrains.research.smtlib.grammar")
 }
 
-tasks.compileKotlin {
-    dependsOn += tasks.generateGrammarSource
-}
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
@@ -71,9 +68,11 @@ tasks {
         withType<JavaCompile> {
             sourceCompatibility = it
             targetCompatibility = it
+            dependsOn.add(generateGrammarSource)
         }
         withType<KotlinCompile> {
             kotlinOptions.jvmTarget = it
+            dependsOn.add(generateGrammarSource)
         }
     }
 
