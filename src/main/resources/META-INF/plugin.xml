@@ -21,7 +21,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <fileType name="SmtLib file" implementationClass="org.jetbrains.research.smtlib.SmtLibFileType"
-                  fieldName="INSTANCE" language="SmtLib" extensions="smtlib"/>
+                  fieldName="INSTANCE" language="SmtLib" extensions="smt2"/>
         <colorSettingsPage implementation="org.jetbrains.research.smtlib.SmtLibColorSettingsPage"/>
         <lang.syntaxHighlighterFactory language="SmtLib"
                                        implementationClass="org.jetbrains.research.smtlib.SmtLibSyntaxHighlighterFactory"/>
