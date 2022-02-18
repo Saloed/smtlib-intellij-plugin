@@ -34,20 +34,25 @@ class SmtLibParserDefinition : DefaultASTFactoryImpl(), ParserDefinition {
             else -> (parser as SMTLIBv2Parser).simpleSymbol()
         }
 
-        override fun createListener(parser: Parser, root: IElementType, builder: PsiBuilder): ANTLRParseTreeToPSIConverter {
+        override fun createListener(
+            parser: Parser,
+            root: IElementType,
+            builder: PsiBuilder
+        ): ANTLRParseTreeToPSIConverter {
             return SMTLIBParseTreeToPsiConverter(language, parser, builder)
         }
     }
 
-    override fun getWhitespaceTokens(): TokenSet = PSIElementTypeFactory.createTokenSet(SmtLibLanguage, SMTLIBv2Lexer.WS)
+    override fun getWhitespaceTokens(): TokenSet = WS
 
-    override fun getCommentTokens(): TokenSet = PSIElementTypeFactory.createTokenSet(SmtLibLanguage, SMTLIBv2Lexer.Comment)
+    override fun getCommentTokens(): TokenSet = COMMENT
 
-    override fun getStringLiteralElements(): TokenSet = PSIElementTypeFactory.createTokenSet(SmtLibLanguage, SMTLIBv2Lexer.String)
+    override fun getStringLiteralElements(): TokenSet = STRING_LITERAL
 
-    override fun spaceExistanceTypeBetweenTokens(left: ASTNode?, right: ASTNode?) = ParserDefinition.SpaceRequirements.MAY
+    override fun getFileNodeType(): IFileElementType = FILE
 
-    override fun getFileNodeType() = IFileElementType(SmtLibLanguage)
+    override fun spaceExistanceTypeBetweenTokens(left: ASTNode?, right: ASTNode?) =
+        ParserDefinition.SpaceRequirements.MAY
 
     override fun createFile(viewProvider: FileViewProvider) = SmtLibFileRoot(viewProvider)
 
@@ -93,10 +98,18 @@ class SmtLibParserDefinition : DefaultASTFactoryImpl(), ParserDefinition {
 
     companion object {
         val SYMBOL: IElementType
+        private val STRING_LITERAL: TokenSet
+        private val COMMENT: TokenSet
+        private val WS: TokenSet
+        private val FILE: IFileElementType
 
         init {
             PSIElementTypeFactory.defineLanguageIElementTypes(SmtLibLanguage, tokenNames, ruleNames)
             SYMBOL = PSIElementTypeFactory.getRuleIElementTypes(SmtLibLanguage)[RULE_symbol]
+            FILE = IFileElementType(SmtLibLanguage)
+            WS = PSIElementTypeFactory.createTokenSet(SmtLibLanguage, SMTLIBv2Lexer.WS)
+            COMMENT = PSIElementTypeFactory.createTokenSet(SmtLibLanguage, SMTLIBv2Lexer.Comment)
+            STRING_LITERAL = PSIElementTypeFactory.createTokenSet(SmtLibLanguage, SMTLIBv2Lexer.String)
         }
     }
 
