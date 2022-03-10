@@ -74,6 +74,7 @@ tasks {
         withType<KotlinCompile> {
             kotlinOptions.jvmTarget = it
             dependsOn.add(generateGrammarSource)
+            kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
         }
     }
 
