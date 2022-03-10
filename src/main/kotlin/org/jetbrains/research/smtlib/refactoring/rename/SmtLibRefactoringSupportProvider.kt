@@ -1,4 +1,4 @@
-package org.jetbrains.research.smtlib.refactoring
+package org.jetbrains.research.smtlib.refactoring.rename
 
 import com.intellij.lang.refactoring.RefactoringSupportProvider
 import com.intellij.psi.PsiElement

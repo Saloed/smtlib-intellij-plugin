@@ -1,4 +1,4 @@
-package org.jetbrains.research.smtlib.refactoring
+package org.jetbrains.research.smtlib.refactoring.inline
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement

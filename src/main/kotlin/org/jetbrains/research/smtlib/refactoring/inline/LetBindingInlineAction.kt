@@ -1,4 +1,4 @@
-package org.jetbrains.research.smtlib.refactoring
+package org.jetbrains.research.smtlib.refactoring.inline
 
 import com.intellij.lang.Language
 import com.intellij.lang.refactoring.InlineActionHandler
@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.util.CommonRefactoringUtil
 import org.jetbrains.research.smtlib.SmtLibLanguage
 import org.jetbrains.research.smtlib.psi.Identifier
-import org.jetbrains.research.smtlib.refactoring.LetBindingInlineRefactoringProcessor.Companion.findLetTerm
+import org.jetbrains.research.smtlib.refactoring.inline.LetBindingInlineRefactoringProcessor.Companion.findLetTerm
 
 
 class LetBindingInlineAction : InlineActionHandler() {

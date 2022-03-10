@@ -1,4 +1,4 @@
-package org.jetbrains.research.smtlib.refactoring
+package org.jetbrains.research.smtlib.refactoring.rename
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.AbstractElementManipulator

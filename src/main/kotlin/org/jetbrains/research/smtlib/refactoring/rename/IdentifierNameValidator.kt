@@ -1,4 +1,4 @@
-package org.jetbrains.research.smtlib.refactoring
+package org.jetbrains.research.smtlib.refactoring.rename
 
 import com.intellij.lang.refactoring.NamesValidator
 import com.intellij.openapi.project.Project

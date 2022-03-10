@@ -12,8 +12,8 @@
     <depends>com.intellij.modules.platform</depends>
 
     <actions>
-        <action id="org.jetbrains.research.smtlib.refactoring.SimplifyAction"
-                class="org.jetbrains.research.smtlib.refactoring.SimplifyAction" text="Simplify Expression"
+        <action id="org.jetbrains.research.smtlib.refactoring.simplify.SimplifyAction"
+                class="org.jetbrains.research.smtlib.refactoring.simplify.SimplifyAction" text="Simplify Expression"
                 description=" Simplify SmtLib assert statement using Z3 engine">
             <add-to-group group-id="RefactoringMenu" anchor="first"/>
         </action>
@@ -32,17 +32,17 @@
         <lang.findUsagesProvider language="SmtLib"
                                  implementationClass="org.jetbrains.research.smtlib.refactoring.SmtLibFindUsagesProvider"/>
         <lang.elementManipulator forClass="org.jetbrains.research.smtlib.psi.Identifier"
-                                 implementationClass="org.jetbrains.research.smtlib.refactoring.IdentifierManipulator"/>
+                                 implementationClass="org.jetbrains.research.smtlib.refactoring.rename.IdentifierManipulator"/>
         <lang.commenter language="SmtLib"
                         implementationClass="org.jetbrains.research.smtlib.refactoring.SmtLibCommenter"/>
         <lang.braceMatcher language="SmtLib"
                            implementationClass="org.jetbrains.research.smtlib.parser.SmtLibBraceMatcher"/>
         <lang.namesValidator language="SmtLib"
-                             implementationClass="org.jetbrains.research.smtlib.refactoring.IdentifierNameValidator"/>
+                             implementationClass="org.jetbrains.research.smtlib.refactoring.rename.IdentifierNameValidator"/>
         <lang.formatter language="SmtLib"
                         implementationClass="org.jetbrains.research.smtlib.formatter.SmtLibFormatterModelBuilder"/>
         <lang.refactoringSupport language="SmtLib"
-                                 implementationClass="org.jetbrains.research.smtlib.refactoring.SmtLibRefactoringSupportProvider"/>
-        <inlineActionHandler implementation="org.jetbrains.research.smtlib.refactoring.LetBindingInlineAction"/>
+                                 implementationClass="org.jetbrains.research.smtlib.refactoring.rename.SmtLibRefactoringSupportProvider"/>
+        <inlineActionHandler implementation="org.jetbrains.research.smtlib.refactoring.inline.LetBindingInlineAction"/>
     </extensions>
 </idea-plugin>

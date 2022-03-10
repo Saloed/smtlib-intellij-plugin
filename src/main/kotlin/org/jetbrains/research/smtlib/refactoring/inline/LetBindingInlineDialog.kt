@@ -1,4 +1,4 @@
-package org.jetbrains.research.smtlib.refactoring
+package org.jetbrains.research.smtlib.refactoring.inline
 
 import com.intellij.BundleBase
 import com.intellij.openapi.project.Project

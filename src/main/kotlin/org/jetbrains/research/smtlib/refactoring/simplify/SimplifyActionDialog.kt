@@ -1,4 +1,4 @@
-package org.jetbrains.research.smtlib.refactoring
+package org.jetbrains.research.smtlib.refactoring.simplify
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
