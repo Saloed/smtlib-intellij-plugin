@@ -44,5 +44,9 @@
         <lang.refactoringSupport language="SmtLib"
                                  implementationClass="org.jetbrains.research.smtlib.refactoring.rename.SmtLibRefactoringSupportProvider"/>
         <inlineActionHandler implementation="org.jetbrains.research.smtlib.refactoring.inline.LetBindingInlineAction"/>
+        <intentionAction>
+            <className>org.jetbrains.research.smtlib.refactoring.simplify.QuickExpressionSimplifyAction</className>
+            <category>SmtLib intentions</category>
+        </intentionAction>
     </extensions>
 </idea-plugin>
