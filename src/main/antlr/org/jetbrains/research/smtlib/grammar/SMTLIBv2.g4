@@ -34,8 +34,7 @@ grammar SMTLIBv2;
 
 
 Comment
-    : Semicolon ~[\r\n]*
-    -> channel(HIDDEN)
+    : Semicolon ~[\r\n]* -> channel(HIDDEN)
     ;
 
 
@@ -56,7 +55,7 @@ String
     ;
 
 QuotedSymbol:
-    '|' (PrintableCharNoBackslash | WhiteSpaceChar)+ '|'
+    '|' (PrintableCharNoBackSlashNoVerticalLine | WhiteSpaceChar | BackSlash AllPrintableChar)+ '|'
     ;
 
 
@@ -260,8 +259,8 @@ Numeral
     | [1-9] Digit*
     ;
 
-Binary:
-    BinaryDigit+
+Binary
+    : '#b' BinaryDigit+
     ;
 
 HexDecimal
@@ -290,27 +289,23 @@ fragment Digit
 fragment Sym
     : 'a'..'z'
     | 'A' .. 'Z'
+    | '~'
+    | '!'
+    | '@'
+    | '$'
+    | '%'
+    | '^'
+    | '&'
+    | '*'
+    | '_'
+    | '-'
     | '+'
     | '='
-    | '/'
-    | '*'
-    | '%'
-    | '?'
-    | '!'
-    | '$'
-    | '-'
-    | '_'
-    | '~'
-    | '&'
-    | '^'
     | '<'
     | '>'
-    | '@'
     | '.'
-    | '{'
-    | '}'
-    | '['
-    | ']'
+    | '?'
+    | '/'
     | ','
     ;
 
@@ -333,11 +328,29 @@ fragment PrintableCharNoDquote
     | EscapedSpace
     ;
 
-fragment PrintableCharNoBackslash
+fragment BackSlash
+    : '\u005C'
+    ;
+
+fragment VerticalLine
+    : '\u007C'
+    ;
+
+fragment PrintableCharNoBackSlashNoVerticalLine
     : '\u0020' .. '\u005B'
     | '\u005D' .. '\u007B'
     | '\u007D' .. '\u007E'
     | '\u0080' .. '\uffff'
+    | EscapedSpace
+    ;
+
+fragment AllPrintableChar
+    : '\u0020' .. '\u005B'
+    | '\u005D' .. '\u007B'
+    | '\u007D' .. '\u007E'
+    | '\u0080' .. '\uffff'
+    | BackSlash
+    | VerticalLine
     | EscapedSpace
     ;
 
