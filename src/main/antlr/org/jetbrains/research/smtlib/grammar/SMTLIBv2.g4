@@ -51,7 +51,7 @@ Semicolon
     ;
 
 String
-    : '"' (PrintableCharNoDquote | WhiteSpaceChar)+ '"'
+    : '"' (PrintableCharNoDquote | WhiteSpaceChar)* '"'
     ;
 
 QuotedSymbol:
