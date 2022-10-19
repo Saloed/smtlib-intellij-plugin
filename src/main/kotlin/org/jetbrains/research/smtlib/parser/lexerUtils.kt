@@ -15,7 +15,7 @@ fun IElementType.lexerType(): LexerType {
         SMTLIBv2Lexer.UndefinedSymbol, SMTLIBv2Lexer.QuotedSymbol -> LexerType.IDENTIFIER
         in SMTLIBv2Lexer.PK_AllStatistics..SMTLIBv2Lexer.PK_Version -> LexerType.BUILTIN_COMMAND
         in SMTLIBv2Lexer.PS_Not..SMTLIBv2Lexer.PS_Unsat -> LexerType.CONSTANT
-        in SMTLIBv2Lexer.CMD_Assert..SMTLIBv2Lexer.CMD_SetOption -> LexerType.COMMAND
+        in SMTLIBv2Lexer.CMD_Assert..SMTLIBv2Lexer.CMD_Query -> LexerType.COMMAND
         in SMTLIBv2Lexer.GRW_Exclamation..SMTLIBv2Lexer.GRW_String -> LexerType.KEYWORD
         in SMTLIBv2Lexer.Numeral..SMTLIBv2Lexer.Decimal -> LexerType.NUMBER
         SMTLIBv2Lexer.ParOpen -> LexerType.OPEN_PAR

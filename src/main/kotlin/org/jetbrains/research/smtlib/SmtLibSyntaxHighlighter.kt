@@ -21,7 +21,7 @@ class SmtLibSyntaxHighlighter : SyntaxHighlighterBase() {
         val ttype = tokenType.castSafelyTo<TokenIElementType>()?.antlrTokenType ?: return EMPTY_KEYS
         val attrKey = when {
             ttype == SMTLIBv2Lexer.UndefinedSymbol -> ID
-            ttype >= SMTLIBv2Lexer.CMD_Assert && ttype <= SMTLIBv2Lexer.CMD_SetOption -> BUILTIN_COMMAND
+            ttype >= SMTLIBv2Lexer.CMD_Assert && ttype <= SMTLIBv2Lexer.CMD_Query -> BUILTIN_COMMAND
             ttype >= SMTLIBv2Lexer.PS_Not && ttype <= SMTLIBv2Lexer.PS_Unsat -> BUILTIN_FUNCTION
             ttype >= SMTLIBv2Lexer.GRW_Exclamation && ttype <= SMTLIBv2Lexer.GRW_String -> BUILTIN_FUNCTION
             ttype == SMTLIBv2Lexer.String -> CONSTANT

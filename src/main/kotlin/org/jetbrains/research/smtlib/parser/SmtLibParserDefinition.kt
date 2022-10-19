@@ -92,6 +92,10 @@ class SmtLibParserDefinition : DefaultASTFactoryImpl(), ParserDefinition {
             RULE_call_term_arguments -> CallArguments(node)
             RULE_term -> Term(node)
             RULE_spec_constant -> Constant(node)
+            RULE_command_cmd_declareRel -> FunDeclaration(node)
+            RULE_command_cmd_declareVar -> FunDeclaration(node)
+            RULE_command_cmd_rule -> AssertCommand(node)
+            RULE_command_cmd_query -> AssertCommand(node)
             else -> OtherPsiNode(node)
         }
     }

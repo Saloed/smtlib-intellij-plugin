@@ -208,8 +208,18 @@ CMD_SetLogic
 CMD_SetOption
     : 'set-option'
     ;
-
-
+CMD_DeclareRel
+    : 'declare-rel'
+    ;
+CMD_DeclareVar
+    : 'declare-var'
+    ;
+CMD_Rule
+    : 'rule'
+    ;
+CMD_Query
+    : 'query'
+    ;
 
 
 // General reserved words
@@ -1052,9 +1062,31 @@ cmd_setOption
     : CMD_SetOption
     ;
 
+cmd_declareRel
+    : CMD_DeclareRel
+    ;
+
+cmd_declareVar
+    : CMD_DeclareVar
+    ;
+
+cmd_rule
+    : CMD_Rule
+    ;
+
+cmd_query
+    : CMD_Query
+    ;
+
 comand_cmd_assert
-     : cmd_assert term
-     ;
+ : cmd_assert term
+ ;
+command_cmd_rule
+ : cmd_rule term
+ ;
+command_cmd_query
+ : cmd_query term
+ ;
 comand_cmd_checkSat
  : cmd_checkSat
  ;
@@ -1063,6 +1095,9 @@ comand_cmd_checkSatAssuming
  ;
 comand_cmd_declareConst
  : cmd_declareConst symbol sort
+ ;
+command_cmd_declareVar
+ : cmd_declareVar symbol sort
  ;
 comand_cmd_declareDatatype
  : cmd_declareDatatype symbol datatype_dec
@@ -1083,6 +1118,9 @@ comand_cmd_declareDatatypes
 comand_cmd_declareFun
  : cmd_declareFun symbol sort_list sort
  ;
+command_cmd_declareRel
+ : cmd_declareRel symbol sort_list
+ ;
 comand_cmd_declareSort
  : cmd_declareSort symbol numeral
  ;
@@ -1093,9 +1131,9 @@ comand_cmd_defineFunRec
  : cmd_defineFunRec function_def
  ;
 
- function_dec_list_non_empty
-    : ParOpen function_dec+ ParClose
-    ;
+function_dec_list_non_empty
+ : ParOpen function_dec+ ParClose
+ ;
 
 // cardinalitiees for function_dec and term have to be n+1
 comand_cmd_defineFunsRec
@@ -1197,6 +1235,10 @@ single_command
     | comand_cmd_setInfo
     | comand_cmd_setLogic
     | comand_cmd_setOption
+    | command_cmd_declareRel
+    | command_cmd_declareVar
+    | command_cmd_rule
+    | command_cmd_query
     | (.)*?
     ;
 
